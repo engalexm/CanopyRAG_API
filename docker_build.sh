@@ -1,0 +1,1 @@
+docker build -t canopy-rag-demo:latest -f Dockerfile .
