@@ -1,6 +1,9 @@
 import streamlit as st
 import os
 
+from dotenv import load_dotenv
+load_dotenv()
+
 from canopy.knowledge_base import KnowledgeBase
 from canopy.tokenizer import Tokenizer
 from canopy.context_engine import ContextEngine
