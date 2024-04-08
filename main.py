@@ -17,12 +17,9 @@ kb = KnowledgeBase(index_name=INDEX_NAME)
 kb.connect()
 
 context_engine = ContextEngine(kb)
-chat_engine = ChatEngine(context_engine)
+chat_engine = ChatEngine(context_engine,allow_model_params_override=True)
 
 st.title("Canopy RAG for 2024 Wealth Outlook")
-
-if "openai_model" not in st.session_state:
-    st.session_state["openai_model"] = "gpt-3.5-turbo"
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
@@ -37,7 +34,11 @@ if prompt := st.chat_input("What is up?"):
         st.markdown(prompt)
 
     with st.chat_message("assistant"):
-        res = chat_engine.chat(messages=[UserMessage(content=st.session_state.messages[-1]['content'])], stream=False)
+        res = chat_engine.chat(
+            messages=[UserMessage(content=st.session_state.messages[-1]['content'])],
+            stream=False, 
+            model_params={'model':'gpt-4-0125-preview'})
+        print(res)
         response = st.write(res.choices[0].message.content)
         #stream = client.chat.completions.create(
         #    model=st.session_state["openai_model"],
