@@ -13,6 +13,10 @@ from canopy.context_engine import ContextEngine
 from canopy.chat_engine import ChatEngine
 from canopy.models.data_models import UserMessage
 
+# Initialize logging
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+
 # Initialize Canopy
 Tokenizer.initialize()
 
@@ -38,8 +42,9 @@ class CanopyRAGInput(BaseModel):
 
 @app.post("/ask_canopy_rag")
 async def ask_canopy_rag(request: CanopyRAGInput):
-    logging.info(f"request.query: {request.query}")
+    logger.info(f"request.query: {request.query}")
     res = chat_engine.chat(messages=[UserMessage(content=request.query)], stream=False)
+    logger.info(f"res: {res}")
     res = res.choices[0].message.content
-    logging.info(f"res: {res}")
+    logger.info(f"res.choices[0].message.content: {res}")
     return res
