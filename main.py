@@ -20,12 +20,14 @@ logger.setLevel(logging.INFO)
 # Initialize Canopy
 Tokenizer.initialize()
 
-INDEX_NAME = "wealth-outlook"
-kb = KnowledgeBase(index_name=INDEX_NAME)
-kb.connect()
-
-context_engine = ContextEngine(kb)
-chat_engine = ChatEngine(context_engine)
+INDEX_NAMES = ["wealth-outlook"]
+CHAT_ENGINES = {}
+for index_name in INDEX_NAMES:
+    kb = KnowledgeBase(index_name=index_name)
+    kb.connect()
+    context_engine = ContextEngine(kb)
+    chat_engine = ChatEngine(context_engine)
+    CHAT_ENGINES[index_name] = chat_engine
 
 # Initialize FastAPI 
 app = FastAPI()
@@ -38,11 +40,13 @@ app.add_middleware(
 )
 
 class CanopyRAGInput(BaseModel):
+    index_name: str
     query: str
 
 @app.post("/ask_canopy_rag")
 async def ask_canopy_rag(request: CanopyRAGInput):
-    logger.info(f"request.query: {request.query}")
+    logger.info(f"request.dict(): {request.dict()}")
+    chat_engine = CHAT_ENGINES[request.index_name]
     res = chat_engine.chat(messages=[UserMessage(content=request.query)], stream=False)
     logger.info(f"res: {res}")
     res = res.choices[0].message.content
