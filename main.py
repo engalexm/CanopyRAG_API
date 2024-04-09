@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 import os
 import logging
 
@@ -32,10 +33,13 @@ app.add_middleware(
     allow_methods=['*']
 )
 
-@app.post("/")
-async def ask_canopy_rag(query_str: str):
-    logging.info(f"query_str: {query_str}")
-    res = chat_engine.chat(messages=[UserMessage(content=query_str)], stream=False)
+class CanopyRAGInput(BaseModel):
+    query: str
+
+@app.post("/ask_canopy_rag")
+async def ask_canopy_rag(request: CanopyRAGInput):
+    logging.info(f"request.query: {request.query}")
+    res = chat_engine.chat(messages=[UserMessage(content=request.query)], stream=False)
     res = res.choices[0].message.content
     logging.info(f"res: {res}")
     return res
