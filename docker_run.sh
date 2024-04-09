@@ -1,1 +1,1 @@
-docker run -d -p 80:8501 --restart=always canopy-rag-demo:latest
+docker run -d -p 8888:8080 --restart=always canopy-rag-api:latest
