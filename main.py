@@ -1,7 +1,5 @@
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+import streamlit as st
 import os
-import logging
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -12,30 +10,44 @@ from canopy.context_engine import ContextEngine
 from canopy.chat_engine import ChatEngine
 from canopy.models.data_models import UserMessage
 
-# Initialize Canopy
 Tokenizer.initialize()
-
 INDEX_NAME = "wealth-outlook"
+
 kb = KnowledgeBase(index_name=INDEX_NAME)
 kb.connect()
 
 context_engine = ContextEngine(kb)
-chat_engine = ChatEngine(context_engine)
+chat_engine = ChatEngine(context_engine,allow_model_params_override=True)
 
-# Initialize FastAPI 
-app = FastAPI()
+st.title("Canopy RAG for 2024 Wealth Outlook")
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=['*'],
-    allow_headers=['*'],
-    allow_methods=['*']
-)
+if "messages" not in st.session_state:
+    st.session_state.messages = []
 
-@app.post("/")
-async def ask_canopy_rag(query_str: str):
-    logging.info(f"query_str: {query_str}")
-    res = chat_engine.chat(messages=[UserMessage(content=query_str)], stream=False)
-    res = res.choices[0].message.content
-    logging.info(f"res: {res}")
-    return res
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
+
+if prompt := st.chat_input("What is up?"):
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    with st.chat_message("user"):
+        st.markdown(prompt)
+
+    with st.chat_message("assistant"):
+        res = chat_engine.chat(
+            messages=[UserMessage(content=st.session_state.messages[-1]['content'])],
+            stream=False, 
+            model_params={'model':'gpt-4-0125-preview'})
+        print(res)
+        response = st.write(res.choices[0].message.content)
+        #stream = client.chat.completions.create(
+        #    model=st.session_state["openai_model"],
+        #    messages=[
+        #        {"role": m["role"], "content": m["content"]}
+        #        for m in st.session_state.messages
+        #    ],
+        #   stream=True,
+        #)
+        #response = st.write_stream(stream)
+        
+    st.session_state.messages.append({"role": "assistant", "content": res.choices[0].message.content})
