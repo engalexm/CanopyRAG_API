@@ -26,8 +26,6 @@ def ask_canopy_rag(event, context):
             res = chat_engine.chat(messages=[UserMessage(content=event["query"])], stream=False)      
             res = res.choices[0].message.content
 
-        return res
-
         return {
             "statusCode": 200,
             "body": json.dumps({
