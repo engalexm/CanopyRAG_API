@@ -25,7 +25,7 @@ def ask_canopy_rag(event, context):
         request_body = event
 
         if 'query' in request_body:
-            res = chat_engine.chat(messages=[UserMessage(content=request_body.query)], stream=False)      
+            res = chat_engine.chat(messages=[UserMessage(content=request_body["query"])], stream=False)      
             res = res.choices[0].message.content
         return res
 
