@@ -29,7 +29,8 @@ def ask_canopy_rag(event, context):
         return {
             "statusCode": 200,
             "body": json.dumps({
-                "result": res
+                "result": res,
+                "event": event
             })
         }
 
