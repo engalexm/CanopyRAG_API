@@ -1,8 +1,5 @@
 import json
-import logging
 import traceback
-logger = logging.getLogger()
-logger.setLevel("INFO")
 
 from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
@@ -27,8 +24,8 @@ def ask_canopy_rag(event, context):
         res = ""
         request_body = json.loads(event['body'])
 
-        logger.info("### REQUEST_BODY")
-        logger.info(request_body)
+        print("### REQUEST_BODY")
+        print(request_body)
 
         if 'query' in request_body:
             res = chat_engine.chat(messages=[UserMessage(content=request.query)], stream=False)      
@@ -36,5 +33,5 @@ def ask_canopy_rag(event, context):
         return res
 
     except Exception as exc:
-        logger.error(traceback.format_exc())
+        print(traceback.format_exc())
         return ""
