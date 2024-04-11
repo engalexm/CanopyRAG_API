@@ -21,6 +21,9 @@ def ask_canopy_rag(event, context):
         context_engine = ContextEngine(kb)
         chat_engine = ChatEngine(context_engine)
 
+        print("### EVENT")
+        print(event)
+
         res = ""
         request_body = json.loads(event['body'])
 
