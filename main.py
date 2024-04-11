@@ -22,15 +22,16 @@ def ask_canopy_rag(event, context):
     try:
         res = ""
 
-        if 'query' in event:
-            res = chat_engine.chat(messages=[UserMessage(content=event["query"])], stream=False)      
+        request_body = json.loads(event["body"])
+
+        if 'query' in request_body:
+            res = chat_engine.chat(messages=[UserMessage(content=request_body["query"])], stream=False)      
             res = res.choices[0].message.content
 
         return {
             "statusCode": 200,
             "body": json.dumps({
-                "result": res,
-                "event": event
+                "result": res
             })
         }
 
