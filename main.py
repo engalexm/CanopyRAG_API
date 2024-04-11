@@ -20,7 +20,7 @@ chat_engine = ChatEngine(context_engine)
 # Query Canopy and Pinecone
 def ask_canopy_rag(event, context):
     try:
-        res = ""
+        res = "Sorry, I was unable to answer that question."
 
         request_body = json.loads(event["body"])
 
@@ -31,7 +31,7 @@ def ask_canopy_rag(event, context):
         return {
             "statusCode": 200,
             "body": json.dumps({
-                "result": res
+                "answer": res
             })
         }
 
@@ -41,6 +41,6 @@ def ask_canopy_rag(event, context):
         return {
             "statusCode": 500,
             "body": json.dumps({
-                "result": traceback.format_exc()
+                "answer": traceback.format_exc()
             })
         }
