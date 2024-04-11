@@ -1,1 +1,1 @@
-docker build -t canopy-rag-api:latest -f Dockerfile .
+docker build --platform linux/amd64 -t canopy-rag-api:latest -f Dockerfile .
