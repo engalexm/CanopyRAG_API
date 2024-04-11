@@ -1,0 +1,16 @@
+{
+    "repository": {
+        "repositoryArn": "arn:aws:ecr:us-east-1:905418383287:repository/canopy-rag-api",
+        "registryId": "905418383287",
+        "repositoryName": "canopy-rag-api",
+        "repositoryUri": "905418383287.dkr.ecr.us-east-1.amazonaws.com/canopy-rag-api",
+        "createdAt": "2024-04-11T15:08:07.366000+00:00",
+        "imageTagMutability": "MUTABLE",
+        "imageScanningConfiguration": {
+            "scanOnPush": false
+        },
+        "encryptionConfiguration": {
+            "encryptionType": "AES256"
+        }
+    }
+}
