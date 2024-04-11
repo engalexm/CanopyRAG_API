@@ -28,6 +28,19 @@ def ask_canopy_rag(event, context):
 
         return res
 
+        return {
+            "statusCode": 200,
+            "body": json.dumps({
+                "result": res
+            })
+        }
+
     except Exception as exc:
         print(traceback.format_exc())
         return traceback.format_exc()
+        return {
+            "statusCode": 500,
+            "body": json.dumps({
+                "result": traceback.format_exc()
+            })
+        }
