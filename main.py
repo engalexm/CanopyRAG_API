@@ -22,7 +22,7 @@ def ask_canopy_rag(event, context):
         chat_engine = ChatEngine(context_engine)
 
         res = ""
-        request_body = json.loads(event)
+        request_body = event
 
         if 'query' in request_body:
             res = chat_engine.chat(messages=[UserMessage(content=request.query)], stream=False)      
