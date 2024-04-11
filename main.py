@@ -1,4 +1,8 @@
 import json
+import logging
+import traceback
+logger = logging.getLogger()
+logger.setLevel("INFO")
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -18,9 +22,13 @@ chat_engine = ChatEngine(context_engine)
 
 # Query Canopy and Pinecone
 def ask_canopy_rag(event, context):
-    res = ""
-    request_body = json.loads(event['body'])
-    if 'query' in request_body:
-        res = chat_engine.chat(messages=[UserMessage(content=request.query)], stream=False)      
-        res = res.choices[0].message.content
-    return res
+    try:
+        res = ""
+        request_body = json.loads(event['body'])
+        if 'query' in request_body:
+            res = chat_engine.chat(messages=[UserMessage(content=request.query)], stream=False)      
+            res = res.choices[0].message.content
+        return res
+    except Exception as exc:
+        logger.error(traceback.format_exc())
+        return ""
