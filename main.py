@@ -24,10 +24,16 @@ def ask_canopy_rag(event, context):
 
         request_body = json.loads(event["body"])
 
-        if 'query' in request_body:
-            res = chat_engine.chat(messages=[UserMessage(content=request_body["query"])], stream=False)      
-            res = res.choices[0].message.content
+        print("### REQUEST_BODY")
+        print(request_body)
 
+        try:
+            res = chat_engine.chat(messages=[UserMessage(content=request_body["message"]["functionCall"]["parameters"]["query"])], stream=False)      
+            res = res.choices[0].message.content
+        except Exception as exc:
+            res = traceback.format_exc()
+            print(res)
+            
         return {
             "statusCode": 200,
             "body": json.dumps({
@@ -37,7 +43,6 @@ def ask_canopy_rag(event, context):
 
     except Exception as exc:
         print(traceback.format_exc())
-        return traceback.format_exc()
         return {
             "statusCode": 500,
             "body": json.dumps({
