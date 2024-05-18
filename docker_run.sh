@@ -1,1 +1,1 @@
-docker run -d -p 8888:8080 --restart=always canopy-rag-api:latest
+docker run -d -p 8888:8080 --restart=always stellark-service:latest

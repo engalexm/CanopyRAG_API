@@ -1,1 +1,1 @@
-docker build -t canopy-rag-api:latest -f Dockerfile .
+docker build stellark-service:latest -f Dockerfile .
