@@ -55,10 +55,10 @@ class CanopyRAGInput(BaseModel):
 @app.post("/upload")
 async def upload_file_to_canopy(file: UploadFile = File(...)):
     try:
-        idx_name = re.sub('[^0-9a-zA-Z]+', '-', file.name.replace('.pdf','').lower())
+        idx_name = re.sub('[^0-9a-zA-Z]+', '-', file.filename.replace('.pdf','').lower())
 
         if f'canopy--{idx_name}' in list_canopy_indexes():
-            detail_str = f"{idx_name} already exists with {file.name} indexed"
+            detail_str = f"{idx_name} already exists with {file.filename} indexed"
 
         else:    
             file_bytes = io.BytesIO(await file.file.read())
@@ -69,8 +69,8 @@ async def upload_file_to_canopy(file: UploadFile = File(...)):
                 data.append({
                     'id': str(i), 
                     'text': page, 
-                    'source': f'{file.name}: page {i+1}', 
-                    'metadata': {'title': file.name,
+                    'source': f'{file.filename}: page {i+1}', 
+                    'metadata': {'title': file.filename,
                                 'primary_category': 'Finance',
                                 'published': 2024
                                 },
