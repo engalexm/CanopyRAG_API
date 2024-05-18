@@ -94,7 +94,7 @@ async def upload_file_to_canopy(file: UploadFile = File(...)):
             kb.create_canopy_index()
             kb.connect()
             kb.upsert(documents,show_progress_bar=True)
-            detail_str = f"Created new index {idx_name} and upserted {len(documents)} documents"
+            detail_str = f"Created new index canopy--{idx_name} and upserted {len(documents)} documents"
 
         return {"status": "OK", "detail": detail_str}
     
