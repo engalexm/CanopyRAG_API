@@ -62,7 +62,7 @@ async def upload_file_to_canopy(file: UploadFile = File(...)):
 
         else:    
             file_bytes = io.BytesIO(file.file.read())
-            doc = fitz.open(file_bytes)
+            doc = fitz.open(stream=file_bytes)
             extracted_text = [page.get_text() for page in doc]
             data = []
             for i,page in enumerate(extracted_text):
