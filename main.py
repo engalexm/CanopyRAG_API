@@ -82,8 +82,8 @@ async def upload_file_to_canopy(file: UploadFile = File(...)):
                
             encoder = OpenAIRecordEncoder(model_name="text-embedding-3-small")
             kb = KnowledgeBase(index_name=idx_name, record_encoder=encoder)
-            kb.connect()
             kb.create_canopy_index()
+            kb.connect()
             kb.upsert(documents,show_progress_bar=True)
             detail_str = f"Created new index {idx_name} and upserted {len(documents)} documents"
 
