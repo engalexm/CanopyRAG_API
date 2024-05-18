@@ -29,14 +29,23 @@ logger.setLevel(logging.INFO)
 Tokenizer.initialize()
 
 # It will only load those indices once which exist at the time of app init
-INDEX_NAMES = list_canopy_indexes()
+INDEX_NAMES = []
 CHAT_ENGINES = {}
-for index_name in INDEX_NAMES:
-    kb = KnowledgeBase(index_name=index_name)
-    kb.connect()
-    context_engine = ContextEngine(kb)
-    chat_engine = ChatEngine(context_engine)
-    CHAT_ENGINES[index_name] = chat_engine
+
+def update_index_engines():
+    global INDEX_NAMES
+    global CHAT_ENGINES
+    INDEX_NAMES = list_canopy_indexes()
+    for index_name in INDEX_NAMES:
+        if index_name not in CHAT_ENGINES:
+            print(f"Adding new index {index_name} to CHAT_ENGINES")
+            kb = KnowledgeBase(index_name=index_name)
+            kb.connect()
+            context_engine = ContextEngine(kb)
+            chat_engine = ChatEngine(context_engine)
+            CHAT_ENGINES[index_name] = chat_engine
+
+update_index_engines()
 
 # Initialize FastAPI 
 app = FastAPI()
@@ -100,7 +109,8 @@ async def ask_canopy_rag(request: CanopyRAGInput):
     try:
         logger.info(f"request.dict(): {request.dict()}")
         assert request.index_name in list_canopy_indexes(), f"request.index_name: {request.index_name} not found in list_canopy_indexes(): {list_canopy_indexes()}"
-        assert request.index_name in CHAT_ENGINES, f"request.index_name: {request.index_name} not found in CHAT_ENGINES: {CHAT_ENGINES}; may need to restart the API to load from Pinecone"
+        if request.index_name not in CHAT_ENGINES:
+           update_index_engines()
         chat_engine = CHAT_ENGINES[request.index_name]
 
         messages = []
