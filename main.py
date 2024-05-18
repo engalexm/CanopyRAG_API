@@ -111,6 +111,7 @@ async def ask_canopy_rag(request: CanopyRAGInput):
         assert request.index_name in list_canopy_indexes(), f"request.index_name: {request.index_name} not found in list_canopy_indexes(): {list_canopy_indexes()}"
         if request.index_name not in CHAT_ENGINES:
            update_index_engines()
+        assert request.index_name in CHAT_ENGINES, f"request.index_name: {request.index_name} not found in CHAT_ENGINES: {CHAT_ENGINES}; may need to restart the API to load from Pinecone"
         chat_engine = CHAT_ENGINES[request.index_name]
 
         messages = []
