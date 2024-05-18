@@ -61,7 +61,7 @@ async def upload_file_to_canopy(file: UploadFile = File(...)):
             detail_str = f"{idx_name} already exists with {file.filename} indexed"
 
         else:    
-            file_bytes = io.BytesIO(await file.file.read())
+            file_bytes = io.BytesIO(file.file.read())
             doc = fitz.open(file_bytes)
             extracted_text = [page.get_text() for page in doc]
             data = []
