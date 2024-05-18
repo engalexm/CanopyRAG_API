@@ -1,1 +1,1 @@
-docker build stellark-service:latest -f Dockerfile .
+docker build -t stellark-service:latest -f Dockerfile .
